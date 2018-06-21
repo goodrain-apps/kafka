@@ -5,7 +5,7 @@ if [[ x$DEBUG != x ]]; then
 fi
 
 # Set java vm start options
-case ${MEMORY_SIZE:-small} in
+case ${MEMORY_SIZE} in
     "micro")
        export default_java_mem_opts="-Xms90m -Xmx90m -Xss512k  -XX:MaxDirectMemorySize=12M"
        echo "Optimizing java process for 128M Memory...." >&2
