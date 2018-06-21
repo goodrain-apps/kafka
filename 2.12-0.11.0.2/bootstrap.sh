@@ -44,8 +44,8 @@ case ${MEMORY_SIZE} in
        ;;
 esac
 
-if [[ "${KAFKA_HEAP_OPTS}" == *-Xmx* ]]; then
-  export KAFKA_HEAP_OPTS="${KAFKA_HEAP_OPTS} -Dlogging.level=$LOGGING_LEVEL -Dfile.encoding=$FILE_ENCODING"
+if [[ x${KAFKA_HEAP_OPTS} == x ]]; then
+  export KAFKA_HEAP_OPTS="-Dlogging.level=$LOGGING_LEVEL -Dfile.encoding=$FILE_ENCODING"
 else
   export KAFKA_HEAP_OPTS="${default_java_opts} ${KAFKA_HEAP_OPTS} -Dlogging.level=$LOGGING_LEVEL -Dfile.encoding=$FILE_ENCODING"
 fi
