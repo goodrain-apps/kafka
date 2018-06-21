@@ -32,8 +32,11 @@ RUN set -x \
     && chown -R "$KAFKA_USER:$KAFKA_USER"  /opt/$KAFKA_DIST \
     && chown -R "$KAFKA_USER:$KAFKA_USER"  $KAFKA_DATA_DIR
 
-ENV KAFKA_HEAP_OPTS="-Xmx512M -Xms512M" \
-    KAFKA_OPTS="-Dlogging.level=INFO" \
+ENV DEBUG=true \
+    FILE_ENCODING=UTF-8 \
+    LOGGING_LEVEL=INFO \
+    MEMORY_SIZE=medium \
+    KAFKA_HEAP_OPTS="" \
     LOG_DIR=/data/kafka \
     LISTENERS=PLAINTEXT://:9093 \
     AUTO_CREATE_TOPICS_ENABLE=true \

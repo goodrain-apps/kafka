@@ -1,14 +1,10 @@
 #!/bin/bash
-#add debug mode
-if [ "x$DEBUG"="x" ];then
+
+if [[ x$DEBUG != x ]]; then
   set -x
 fi
-#add pause mode
-if [ "x$PAUSE"!="x" ];then
-  sleep $PAUSE
-fi
 
-## set default_java_mem_opts
+# Set java vm start options
 case ${MEMORY_SIZE:-small} in
     "micro")
        export default_java_mem_opts="-Xms90m -Xmx90m -Xss512k  -XX:MaxDirectMemorySize=12M"
@@ -49,10 +45,9 @@ case ${MEMORY_SIZE:-small} in
 esac
 
 if [[ "${KAFKA_HEAP_OPTS}" == *-Xmx* ]]; then
-  export JAVA_TOOL_OPTIONS=${JAVA_TOOL_OPTIONS:-"-Dfile.encoding=UTF-8"}
+  export KAFKA_HEAP_OPTS="${KAFKA_HEAP_OPTS} -Dlogging.level=$LOGGING_LEVEL -Dfile.encoding=$FILE_ENCODING"
 else
-  default_java_opts="${default_java_mem_opts} -Dfile.encoding=UTF-8"
-  export KAFKA_HEAP_OPTS="${default_java_opts} $KAFKA_HEAP_OPTS"
+  export KAFKA_HEAP_OPTS="${default_java_opts} ${KAFKA_HEAP_OPTS} -Dlogging.level=$LOGGING_LEVEL -Dfile.encoding=$FILE_ENCODING"
 fi
 
 index=0
@@ -66,7 +61,7 @@ while [[ `net port $ZOOKEEPER_HOST $ZOOKEEPER_PORT` == 'close' ]]; do
 done
 echo "zookeeper is started."
 
-#main
+# Launch
 exec kafka-server-start.sh /opt/kafka/config/server.properties \
 --override broker.id=${HOSTNAME##*-} \
 --override zookeeper.connect=$ZOOKEEPER_HOST:$ZOOKEEPER_PORT \
