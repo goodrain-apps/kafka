@@ -62,7 +62,7 @@ done
 echo "zookeeper is started."
 
 # Launch
-exec $KAFKA_HOME/bin/kafka-server-start.sh /opt/kafka/config/server.properties \
+exec kafka-server-start.sh /opt/kafka/config/server.properties \
 --override broker.id=${HOSTNAME##*-} \
 --override zookeeper.connect=$ZOOKEEPER_HOST:$ZOOKEEPER_PORT \
 --override log.dir=$LOG_DIR \
