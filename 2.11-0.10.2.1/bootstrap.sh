@@ -51,7 +51,7 @@ else
 fi
 
 index=0
-while [[ `net port $ZOOKEEPER_HOST $ZOOKEEPER_PORT` == 'close' ]]; do
+while [[ `net portcheck $ZOOKEEPER_HOST $ZOOKEEPER_PORT` == 'close' ]]; do
 	[[ $((index++)) > 30 ]] && {
 		echo "wait zookeeper timeout."
 		exit 11
