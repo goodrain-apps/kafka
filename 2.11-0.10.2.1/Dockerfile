@@ -1,4 +1,5 @@
 FROM ubuntu:16.04 
+
 ENV KAFKA_USER=kafka
 ENV KAFKA_DATA_DIR=/var/lib/kafka/data
 ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
