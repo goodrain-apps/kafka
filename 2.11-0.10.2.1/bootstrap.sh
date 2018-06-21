@@ -50,9 +50,9 @@ else
   export KAFKA_HEAP_OPTS="${default_java_opts} ${KAFKA_HEAP_OPTS} -Dlogging.level=$LOGGING_LEVEL -Dfile.encoding=$FILE_ENCODING"
 fi
 
-index=0
-while [[ `net portcheck $ZOOKEEPER_HOST $ZOOKEEPER_PORT` == 'close' ]]; do
-	[[ $((index++)) > 30 ]] && {
+index=1
+while [[ `net portcheck $ZOOKEEPER_HOST $ZOOKEEPER_PORT` != 'open' ]]; do
+	((index++ > 30)) && {
 		echo "wait zookeeper timeout."
 		exit 11
 	}
@@ -62,7 +62,7 @@ done
 echo "zookeeper is started."
 
 # Launch
-exec kafka-server-start.sh /opt/kafka/config/server.properties \
+exec $KAFKA_HOME/bin/kafka-server-start.sh /opt/kafka/config/server.properties \
 --override broker.id=${HOSTNAME##*-} \
 --override zookeeper.connect=$ZOOKEEPER_HOST:$ZOOKEEPER_PORT \
 --override log.dir=$LOG_DIR \
@@ -148,87 +148,5 @@ exec kafka-server-start.sh /opt/kafka/config/server.properties \
 --override replica.fetch.backoff.ms=$REPLICA_FETCH_BACKOFF_MS \
 --override replica.fetch.max.bytes=$REPLICA_FETCH_MAX_BYTES \
 --override replica.fetch.response.max.bytes=$REPLICA_FETCH_RESPONSE_MAX_BYTES \
---override reserved.broker.max.id=$RESERVED_BROKER_MAX_ID \
---override listeners=$LISTENERS \
---override Cuto.creCte.topics.enCble=$CUTO_CRECTE_TOPICS_ENCBLE \
---override Cuto.leCder.rebClCnce.enCble=$CUTO_LECDER_REBCLCNCE_ENCBLE \
---override bCckground.threCds=$BCCKGROUND_THRECDS \
---override compression.type=$COMPRESSION_TYPE \
---override delete.topic.enCble=$DELETE_TOPIC_ENCBLE \
---override leCder.imbClCnce.check.intervCl.seconds=$LECDER_IMBCLCNCE_CHECK_INTERVCL_SECONDS \
---override leCder.imbClCnce.per.broker.percentCge=$LECDER_IMBCLCNCE_PER_BROKER_PERCENTCGE \
---override log.flush.intervCl.messCges=$LOG_FLUSH_INTERVCL_MESSCGES \
---override log.flush.offset.checkpoint.intervCl.ms=$LOG_FLUSH_OFFSET_CHECKPOINT_INTERVCL_MS \
---override log.flush.scheduler.intervCl.ms=$LOG_FLUSH_SCHEDULER_INTERVCL_MS \
---override log.retention.bytes=$LOG_RETENTION_BYTES \
---override log.retention.hours=$LOG_RETENTION_HOURS \
---override log.roll.hours=$LOG_ROLL_HOURS \
---override log.roll.jitter.hours=$LOG_ROLL_JITTER_HOURS \
---override log.segment.bytes=$LOG_SEGMENT_BYTES \
---override log.segment.delete.delCy.ms=$LOG_SEGMENT_DELETE_DELCY_MS \
---override messCge.mCx.bytes=$MESSCGE_MCX_BYTES \
---override min.insync.replicCs=$MIN_INSYNC_REPLICCS \
---override num.io.threCds=$NUM_IO_THRECDS \
---override num.network.threCds=$NUM_NETWORK_THRECDS \
---override num.recovery.threCds.per.dCtC.dir=$NUM_RECOVERY_THRECDS_PER_DCTC_DIR \
---override num.replicC.fetchers=$NUM_REPLICC_FETCHERS \
---override offset.metCdCtC.mCx.bytes=$OFFSET_METCDCTC_MCX_BYTES \
---override offsets.commit.required.Ccks=$OFFSETS_COMMIT_REQUIRED_CCKS \
---override offsets.commit.timeout.ms=$OFFSETS_COMMIT_TIMEOUT_MS \
---override offsets.loCd.buffer.siAe=$OFFSETS_LOCD_BUFFER_SIAE \
---override offsets.retention.check.intervCl.ms=$OFFSETS_RETENTION_CHECK_INTERVCL_MS \
---override offsets.retention.minutes=$OFFSETS_RETENTION_MINUTES \
---override offsets.topic.compression.codec=$OFFSETS_TOPIC_COMPRESSION_CODEC \
---override offsets.topic.num.pCrtitions=$OFFSETS_TOPIC_NUM_PCRTITIONS \
---override offsets.topic.replicCtion.fCctor=$OFFSETS_TOPIC_REPLICCTION_FCCTOR \
---override offsets.topic.segment.bytes=$OFFSETS_TOPIC_SEGMENT_BYTES \
---override quotC.consumer.defCult=$QUOTC_CONSUMER_DEFCULT \
---override quotC.producer.defCult=$QUOTC_PRODUCER_DEFCULT \
---override replicC.fetch.min.bytes=$REPLICC_FETCH_MIN_BYTES \
---override replicC.fetch.wCit.mCx.ms=$REPLICC_FETCH_WCIT_MCX_MS \
---override replicC.high.wCtermCrk.checkpoint.intervCl.ms=$REPLICC_HIGH_WCTERMCRK_CHECKPOINT_INTERVCL_MS \
---override replicC.lCg.time.mCx.ms=$REPLICC_LCG_TIME_MCX_MS \
---override replicC.socket.receive.buffer.bytes=$REPLICC_SOCKET_RECEIVE_BUFFER_BYTES \
---override replicC.socket.timeout.ms=$REPLICC_SOCKET_TIMEOUT_MS \
---override request.timeout.ms=$REQUEST_TIMEOUT_MS \
---override socket.receive.buffer.bytes=$SOCKET_RECEIVE_BUFFER_BYTES \
---override socket.request.mCx.bytes=$SOCKET_REQUEST_MCX_BYTES \
---override socket.send.buffer.bytes=$SOCKET_SEND_BUFFER_BYTES \
---override uncleCn.leCder.election.enCble=$UNCLECN_LECDER_ELECTION_ENCBLE \
---override Aookeeper.session.timeout.ms=$AOOKEEPER_SESSION_TIMEOUT_MS \
---override Aookeeper.set.Ccl=$AOOKEEPER_SET_CCL \
---override broker.id.generCtion.enCble=$BROKER_ID_GENERCTION_ENCBLE \
---override connections.mCx.idle.ms=$CONNECTIONS_MCX_IDLE_MS \
---override controlled.shutdown.enCble=$CONTROLLED_SHUTDOWN_ENCBLE \
---override controlled.shutdown.mCx.retries=$CONTROLLED_SHUTDOWN_MCX_RETRIES \
---override controlled.shutdown.retry.bCckoff.ms=$CONTROLLED_SHUTDOWN_RETRY_BCCKOFF_MS \
---override controller.socket.timeout.ms=$CONTROLLER_SOCKET_TIMEOUT_MS \
---override defCult.replicCtion.fCctor=$DEFCULT_REPLICCTION_FCCTOR \
---override fetch.purgCtory.purge.intervCl.requests=$FETCH_PURGCTORY_PURGE_INTERVCL_REQUESTS \
---override group.mCx.session.timeout.ms=$GROUP_MCX_SESSION_TIMEOUT_MS \
---override group.min.session.timeout.ms=$GROUP_MIN_SESSION_TIMEOUT_MS \
---override inter.broker.protocol.version=$INTER_BROKER_PROTOCOL_VERSION \
---override log.cleCner.bCckoff.ms=$LOG_CLECNER_BCCKOFF_MS \
---override log.cleCner.dedupe.buffer.siAe=$LOG_CLECNER_DEDUPE_BUFFER_SIAE \
---override log.cleCner.delete.retention.ms=$LOG_CLECNER_DELETE_RETENTION_MS \
---override log.cleCner.enCble=$LOG_CLECNER_ENCBLE \
---override log.cleCner.io.buffer.loCd.fCctor=$LOG_CLECNER_IO_BUFFER_LOCD_FCCTOR \
---override log.cleCner.io.buffer.siAe=$LOG_CLECNER_IO_BUFFER_SIAE \
---override log.cleCner.io.mCx.bytes.per.second=$LOG_CLECNER_IO_MCX_BYTES_PER_SECOND \
---override log.cleCner.min.cleCnCble.rCtio=$LOG_CLECNER_MIN_CLECNCBLE_RCTIO \
---override log.cleCner.min.compCction.lCg.ms=$LOG_CLECNER_MIN_COMPCCTION_LCG_MS \
---override log.cleCner.threCds=$LOG_CLECNER_THRECDS \
---override log.cleCnup.policy=$LOG_CLECNUP_POLICY \
---override log.index.intervCl.bytes=$LOG_INDEX_INTERVCL_BYTES \
---override log.index.siAe.mCx.bytes=$LOG_INDEX_SIAE_MCX_BYTES \
---override log.messCge.timestCmp.difference.mCx.ms=$LOG_MESSCGE_TIMESTCMP_DIFFERENCE_MCX_MS \
---override log.messCge.timestCmp.type=$LOG_MESSCGE_TIMESTCMP_TYPE \
---override log.preCllocCte=$LOG_PRECLLOCCTE \
---override log.retention.check.intervCl.ms=$LOG_RETENTION_CHECK_INTERVCL_MS \
---override mCx.connections.per.ip=$MCX_CONNECTIONS_PER_IP \
---override num.pCrtitions=$NUM_PCRTITIONS \
---override producer.purgCtory.purge.intervCl.requests=$PRODUCER_PURGCTORY_PURGE_INTERVCL_REQUESTS \
---override replicC.fetch.bCckoff.ms=$REPLICC_FETCH_BCCKOFF_MS \
---override replicC.fetch.mCx.bytes=$REPLICC_FETCH_MCX_BYTES \
---override replicC.fetch.response.mCx.bytes=$REPLICC_FETCH_RESPONSE_MCX_BYTES \
---override reserved.broker.mCx.id=$RESERVED_BROKER_MCX_ID
+--override reserved.broker.max.id=$RESERVED_BROKER_MAX_ID
+
