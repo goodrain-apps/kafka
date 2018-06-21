@@ -10,9 +10,9 @@ ARG KAFKA_DIST=kafka_2.11-0.10.2.1
 RUN set -x \
     && apt-get update \
     && apt-get install -y openjdk-8-jre-headless wget \
-    && wget "http://www.apache.org/dist/kafka/$KAFKA_VERSION/$KAFKA_DIST.tgz" \
-    && wget "http://www.apache.org/dist/kafka/$KAFKA_VERSION/$KAFKA_DIST.tgz.asc" \
-    && wget "http://kafka.apache.org/KEYS" \
+    && wget -q "http://www.apache.org/dist/kafka/$KAFKA_VERSION/$KAFKA_DIST.tgz" \
+    && wget -q "http://www.apache.org/dist/kafka/$KAFKA_VERSION/$KAFKA_DIST.tgz.asc" \
+    && wget -q "http://kafka.apache.org/KEYS" \
     && export GNUPGHOME="$(mktemp -d)" \
     && gpg --import KEYS \
     && gpg --batch --verify "$KAFKA_DIST.tgz.asc" "$KAFKA_DIST.tgz" \
@@ -24,7 +24,7 @@ RUN set -x \
     && useradd $KAFKA_USER \
     && [ `id -u $KAFKA_USER` -eq 1000 ] \
     && [ `id -g $KAFKA_USER` -eq 1000 ] \
-    && chown -R "$KAFKA_USER:$KAFKA_USER"  /opt/$KAFKA_DIST \
+    && chown -R "$KAFKA_USER:$KAFKA_USER"  /opt/$KAFKA_DIST
 
 EXPOSE 9093
 VOLUME /data/kafka
