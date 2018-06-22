@@ -15,6 +15,7 @@ RUN set -x \
     && rm -rf "$KAFKA_DIST.tgz"
     
 RUN set -x \
+    && /bin/cp -f /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
     && ln -s /opt/$KAFKA_DIST $KAFKA_HOME \
     && useradd $KAFKA_USER \
     && [ `id -u $KAFKA_USER` -eq 1000 ] \
