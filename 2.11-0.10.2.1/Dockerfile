@@ -15,7 +15,6 @@ RUN set -x \
     && rm -rf "$KAFKA_DIST.tgz"
     
 RUN set -x \
-    && /bin/cp -f /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
     && ln -s /opt/$KAFKA_DIST $KAFKA_HOME \
     && useradd $KAFKA_USER \
     && [ `id -u $KAFKA_USER` -eq 1000 ] \
@@ -25,6 +24,7 @@ RUN set -x \
 EXPOSE 9093
 VOLUME /data/kafka
 COPY log4j.properties $KAFKA_HOME/config/
+COPY Shanghai /etc/localtime
 
 ENV DEBUG=true
 ENV FILE_ENCODING=UTF-8
