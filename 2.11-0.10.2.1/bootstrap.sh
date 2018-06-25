@@ -66,7 +66,7 @@ exec kafka-server-start.sh /opt/kafka/config/server.properties \
 --override broker.id=${HOSTNAME##*-} \
 --override zookeeper.connect=$ZOOKEEPER_HOST:$ZOOKEEPER_PORT \
 --override listeners=${LISTENERS:-PLAINTEXT://:9093} \
---override log.dir=${LOG_DIR:-/var/lib/kafka} \
+--override log.dir=${LOG_DIR:-/data/kafka} \
 --override auto.create.topics.enable=${AUTO_CREATE_TOPICS_ENABLE:-true} \
 --override auto.leader.rebalance.enable=${AUTO_LEADER_REBALANCE_ENABLE:-true} \
 --override background.threads=${BACKGROUND_THREADS:-10} \
