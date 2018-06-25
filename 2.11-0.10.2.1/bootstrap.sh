@@ -47,7 +47,7 @@ esac
 if [[ "${KAFKA_HEAP_OPTS}" == *-Xmx* ]]; then
   export KAFKA_HEAP_OPTS="$KAFKA_HEAP_OPTS -Dlogging.level=$LOGGING_LEVEL -Dfile.encoding=$FILE_ENCODING"
 else
-  export KAFKA_HEAP_OPTS="${default_java_opts} $KAFKA_HEAP_OPTS -Dlogging.level=$LOGGING_LEVEL -Dfile.encoding=$FILE_ENCODING"
+  export KAFKA_HEAP_OPTS="${default_java_mem_opts} $KAFKA_HEAP_OPTS -Dlogging.level=$LOGGING_LEVEL -Dfile.encoding=$FILE_ENCODING"
 fi
 
 index=1
