@@ -21,8 +21,6 @@ RUN set -x \
     && [ `id -g $KAFKA_USER` -eq 1000 ] \
     && chown -R "$KAFKA_USER:$KAFKA_USER"  /opt/$KAFKA_DIST
 
-EXPOSE 9093
-VOLUME /data/kafka
 COPY log4j.properties $KAFKA_HOME/config/
 COPY Shanghai /etc/localtime
 
@@ -57,4 +55,4 @@ ENV NUM_REPLICA_FETCHERS=1
 
 COPY bootstrap.sh net /usr/bin/
 
-CMD bash
+CMD bootstrap.sh
