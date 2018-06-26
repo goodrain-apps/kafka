@@ -33,13 +33,13 @@ DEBUG | true | 打印应用启动脚本的执行日志
     ![add-cluster](http://grstatic.oss-cn-shanghai.aliyuncs.com/images/docs/common/kafka-dashboard-add-cluster.jpg)
 1. 点击页面最下方的`Save`，然后就可以查看kafka集群的各个状态了。
 
-## 基准测试
+## 基准测试-集群内连接
 
 ### 启动kafka
-安装kafka，并将kafka实例数设置为3，每个实例分配1G内存。
+安装kafka，并将kafka实例数设置为3，每个实例分配1G内存，并打开内部端口。
 
 ### 启动kafka-client
-因为kafka的生产者和消费者也会占用一部分内存，所以我们让这两个进程运行在一个单独的容器中，首先从源码安装kafka-clinet，并将内存设置为1G：
+因为kafka的生产者和消费者也会占用一部分内存，所以我们让这两个进程运行在一个单独的容器中，首先从源码安装kafka-clinet，并将内存设置为1G，并依赖kafka和zookeeper：
 ```
 https://github.com/goodrain-apps/kafka.git?dir=client
 ```
@@ -49,7 +49,7 @@ https://github.com/goodrain-apps/kafka.git?dir=client
 ### 创建topic
 ```
 kafka-topics.sh --create \
---zookeeper 127.0.0.1:2181 \
+--zookeeper $ZOOKEEPER_HOST:$ZOOKEEPER_PORT \
 --replication-factor 3 \
 --partitions 3 \
 --topic test1
@@ -58,18 +58,12 @@ kafka-topics.sh --create \
 ### 启动消费者
 ```
 kafka-console-consumer.sh \
---zookeeper 127.0.0.1:2181 \
+--zookeeper $ZOOKEEPER_HOST:$ZOOKEEPER_PORT \
 --from-beginning \
 --topic test1 > /dev/null
 ```
 
 ### 启动生产者
-在kafka容器中执行以下命令，获取kafka的所有节点：
-```
-net lookuprsv --format "%s:9093" $SERVICE_NAME
-```
-
-将得到的值替换到下列中的`<broker_list>`，然后在kafka-client中执行：
 ```
 time kafka-producer-perf-test.sh \
 --topic test1 \
@@ -78,7 +72,7 @@ time kafka-producer-perf-test.sh \
 --record-size $((1024*100)) \
 --producer-props \
 acks=all \
-bootstrap.servers=<broker_list> \
+bootstrap.servers=$KAFKA_HOST:$KAFKA_PORT \
 buffer.memory=$((1024*1024*1024)) \
 compression.type=none \
 batch.size=0
@@ -111,4 +105,7 @@ real    1m41.007s
 user    0m9.354s
 sys     0m2.324s
 ```
+
+## 基准测试-集群外连接
+目前kafka不支持从云帮外部连接使用。
 
